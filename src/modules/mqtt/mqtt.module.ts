@@ -1,7 +1,9 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { connect } from 'mqtt';
-import { RootOption } from 'src/adapters/inbounds/mqtt/rootOption.interface';
+import { MqttService } from 'src/modules/mqtt/mqtt.service';
+import { RootOption } from 'src/modules/mqtt/rootOption.interface';
 
+@Global()
 @Module({})
 export class MqttModule {
   static forRoot(option: RootOption): DynamicModule {
@@ -21,7 +23,16 @@ export class MqttModule {
         handlerMap.get(topic)(message.toString());
       });
 
-      return { module: MqttModule };
+      return {
+        module: MqttModule,
+        providers: [
+          {
+            provide: MqttService,
+            useValue: new MqttService(client),
+          },
+        ],
+        exports: [MqttService],
+      };
     } catch (error) {
       console.error('MQTT Adapter connection error');
       console.error(error);
