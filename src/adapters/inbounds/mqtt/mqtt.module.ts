@@ -1,7 +1,7 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { connect } from 'mqtt';
-import { MqttService } from 'src/modules/mqtt/mqtt.service';
-import { RootOption } from 'src/modules/mqtt/rootOption.interface';
+import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
+import { RootOption } from 'src/adapters/inbounds/mqtt/rootOption.interface';
 
 @Global()
 @Module({})
