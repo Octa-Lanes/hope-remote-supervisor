@@ -5,5 +5,4 @@ export interface TopicHandler {
 
 export interface RootOption {
   connection: string;
-  topics: TopicHandler[];
 }

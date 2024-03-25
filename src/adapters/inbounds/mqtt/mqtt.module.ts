@@ -1,41 +1,78 @@
-import { DynamicModule, Global, Module } from '@nestjs/common';
-import { connect } from 'mqtt';
+// mqtt.module.ts
+import 'reflect-metadata';
+
+import {
+  DynamicModule,
+  Global,
+  Inject,
+  Module,
+  OnModuleInit,
+} from '@nestjs/common';
+import { DiscoveryModule, DiscoveryService } from '@nestjs/core';
+import * as _ from 'lodash';
+import { connect, MqttClient } from 'mqtt';
+import { MqttController } from 'src/adapters/inbounds/mqtt/mqtt.controller';
 import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
 import { RootOption } from 'src/adapters/inbounds/mqtt/rootOption.interface';
+import { MQTT_HANDLER_METADATA_KEY } from 'src/commons/decorators/mqtt.decorator';
 
 @Global()
 @Module({})
-export class MqttModule {
+export class MqttModule implements OnModuleInit {
+  constructor(
+    private readonly discoveryService: DiscoveryService,
+    @Inject('MQTT_CLIENT') private readonly mqttClient: MqttClient,
+  ) {}
+
   static forRoot(option: RootOption): DynamicModule {
-    try {
-      const client = connect(option.connection);
-      const handlerMap = new Map();
+    const client = connect(option.connection);
+    return {
+      module: MqttModule,
+      imports: [DiscoveryModule],
+      providers: [
+        MqttController,
+        {
+          provide: 'MQTT_CLIENT',
+          useValue: client,
+        },
+        {
+          provide: MqttService,
+          useValue: new MqttService(client),
+        },
+      ],
+      exports: ['MQTT_CLIENT', MqttController, MqttService],
+    };
+  }
 
-      console.info('MQTT Adapter is connected to', option.connection);
+  onModuleInit() {
+    const mqttController = this.discoveryService
+      .getProviders()
+      .find((provider) => provider.name === MqttController.name);
 
-      option.topics.forEach(({ topic, handler }) => {
-        client.subscribe(topic);
-        console.info('MQTT Adapter subscribed to', topic);
-        handlerMap.set(topic, handler);
-      });
+    if (_.isEmpty(mqttController)) return;
 
-      client.on('message', (topic, message) => {
-        handlerMap.get(topic)(message.toString());
-      });
+    const instance = mqttController.instance;
+    const prototype = Object.getPrototypeOf(instance);
 
-      return {
-        module: MqttModule,
-        providers: [
-          {
-            provide: MqttService,
-            useValue: new MqttService(client),
-          },
-        ],
-        exports: [MqttService],
-      };
-    } catch (error) {
-      console.error('MQTT Adapter connection error');
-      console.error(error);
-    }
+    const methods = Object.getOwnPropertyNames(prototype).filter(
+      (method) =>
+        method !== 'constructor' && typeof instance[method] === 'function',
+    );
+
+    const handlers = new Map();
+
+    methods.forEach((method) => {
+      const metadata = Reflect.getMetadata(
+        MQTT_HANDLER_METADATA_KEY,
+        instance[method],
+      );
+
+      handlers.set(metadata, instance[method]);
+    });
+
+    this.mqttClient.subscribe([...handlers.keys()]);
+    this.mqttClient.on('message', (topic, message) => {
+      handlers.get(topic)(message.toString());
+    });
   }
 }
