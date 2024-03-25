@@ -1,9 +1,12 @@
 import { Global, Module } from '@nestjs/common';
-import { InboundModule } from 'src/adapters/inbounds/inbound.module';
-import { OutboundModule } from 'src/adapters/outbounds/outbound.module';
+import { MqttModule } from 'src/adapters/inbounds/mqtt/mqtt.module';
 
 @Global()
 @Module({
-  imports: [InboundModule, OutboundModule],
+  imports: [
+    MqttModule.forRoot({
+      connection: process.env.MQTT_HOST,
+    }),
+  ],
 })
 export class AdapterModule {}

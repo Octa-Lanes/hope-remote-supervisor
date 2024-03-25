@@ -1,4 +1,3 @@
-// mqtt.module.ts
 import 'reflect-metadata';
 
 import {
@@ -11,7 +10,7 @@ import {
 import { DiscoveryModule, DiscoveryService } from '@nestjs/core';
 import * as _ from 'lodash';
 import { connect, MqttClient } from 'mqtt';
-import { MqttController } from 'src/adapters/inbounds/mqtt/mqtt.controller';
+import { MqttController } from 'src/adapters/inbounds/controller/mqtt.controller';
 import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
 import { RootOption } from 'src/adapters/inbounds/mqtt/rootOption.interface';
 import { MQTT_HANDLER_METADATA_KEY } from 'src/commons/decorators/mqtt.decorator';
@@ -59,6 +58,8 @@ export class MqttModule implements OnModuleInit {
         method !== 'constructor' && typeof instance[method] === 'function',
     );
 
+    if (methods.length === 0) return;
+
     const handlers = new Map();
 
     methods.forEach((method) => {
@@ -67,7 +68,7 @@ export class MqttModule implements OnModuleInit {
         instance[method],
       );
 
-      handlers.set(metadata, instance[method]);
+      handlers.set(metadata, instance[method].bind(instance));
     });
 
     this.mqttClient.subscribe([...handlers.keys()]);
