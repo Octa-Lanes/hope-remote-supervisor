@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { exec } from 'child_process';
 import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
-import { SSH_LIVE_CMD } from 'src/commons/constants/command';
-import { SSH_LIVE_TOPIC } from 'src/commons/constants/topic';
+import { SSH_LIVE_CMD } from 'src/commons/constants/command.constant';
+import { SSH_LIVE_TOPIC } from 'src/commons/constants/topic.constant';
 
 @Injectable()
 export class LiveSchedule {
