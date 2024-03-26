@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { Global, Module } from '@nestjs/common';
 import { MqttModule } from 'src/adapters/inbounds/mqtt/mqtt.module';
 
