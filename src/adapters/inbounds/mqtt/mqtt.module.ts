@@ -4,6 +4,7 @@ import {
   DynamicModule,
   Global,
   Inject,
+  Logger,
   Module,
   OnModuleInit,
 } from '@nestjs/common';
@@ -18,29 +19,38 @@ import { MQTT_HANDLER_METADATA_KEY } from 'src/commons/decorators/mqtt.decorator
 @Global()
 @Module({})
 export class MqttModule implements OnModuleInit {
+  private readonly logger = new Logger(MqttModule.name);
+
   constructor(
     private readonly discoveryService: DiscoveryService,
     @Inject('MQTT_CLIENT') private readonly mqttClient: MqttClient,
   ) {}
 
   static forRoot(option: RootOption): DynamicModule {
-    const client = connect(option.connection);
-    return {
-      module: MqttModule,
-      imports: [DiscoveryModule],
-      providers: [
-        MqttController,
-        {
-          provide: 'MQTT_CLIENT',
-          useValue: client,
-        },
-        {
-          provide: MqttService,
-          useValue: new MqttService(client),
-        },
-      ],
-      exports: ['MQTT_CLIENT', MqttController, MqttService],
-    };
+    try {
+      const client = connect(option.connection);
+
+      console.log('Connected to mqtt');
+
+      return {
+        module: MqttModule,
+        imports: [DiscoveryModule],
+        providers: [
+          MqttController,
+          {
+            provide: 'MQTT_CLIENT',
+            useValue: client,
+          },
+          {
+            provide: MqttService,
+            useValue: new MqttService(client),
+          },
+        ],
+        exports: ['MQTT_CLIENT', MqttController, MqttService],
+      };
+    } catch (error) {
+      console.error('Fail to connect to mqtt');
+    }
   }
 
   onModuleInit() {

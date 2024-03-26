@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { exec } from 'child_process';
-import { SSH_LIVE_CMD } from 'src/commons/constants/command.constant';
+import {
+  pgrokSSHServiceStatus,
+  stopPgrokSSHService,
+} from 'src/commons/helpers/systemd.helper';
 
 @Injectable()
 export class SshShutdownUseCase {
@@ -9,27 +11,10 @@ export class SshShutdownUseCase {
   constructor() {}
 
   public async handle() {
-    exec(SSH_LIVE_CMD, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        return;
-      }
-      if (!stdout) return;
+    const status = await pgrokSSHServiceStatus();
 
-      const isLive = stdout.match(/pgrok tcp 22/);
+    if (!status) return;
 
-      if (!isLive) return;
-
-      const [, pid] = stdout.match(/([0-9]+) pgrok tcp 22/);
-
-      exec(`kill ${pid}`, (error, stdout, stderr) => {
-        if (error) {
-          this.logger.error(`exec error: ${error}`);
-          return;
-        }
-        this.logger.log(`stdout: ${stdout}`);
-        this.logger.log(`stderr: ${stderr}`);
-      });
-    });
+    await stopPgrokSSHService();
   }
 }

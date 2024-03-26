@@ -1,4 +1,4 @@
-import { getDeviceId } from 'src/commons/helpers/utils';
+import { getDeviceId } from 'src/commons/helpers/utils.helper';
 
 const deviceId = getDeviceId();
 
