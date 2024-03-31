@@ -9,9 +9,13 @@ interface PgrokConfig {
   token: string;
 }
 
-const pgrokConfigFile = process.env.PGROK_CONFIG || "~/.config/pgrok/pgork.yml"
-const doc = load(readFileSync(pgrokConfigFile, "utf8")) as PgrokConfig;
-
 export const getDeviceId = (): string => {
-  return doc.token;
+  try {
+    const pgrokConfigFile =
+      process.env.PGROK_CONFIG || '~/.config/pgrok/pgork.yml';
+    const doc = load(readFileSync(pgrokConfigFile, 'utf8')) as PgrokConfig;
+    return doc.token;
+  } catch (error) {
+    console.error('Loading PGROK_CONFIG failed', error);
+  }
 };
