@@ -7,6 +7,7 @@ interface PgrokConfig {
   remote_addr: string;
   forward_addr: string;
   token: string;
+  vmId: string;
 }
 
 export const getDeviceId = (): string => {
@@ -14,7 +15,7 @@ export const getDeviceId = (): string => {
     const pgrokConfigFile =
       process.env.PGROK_CONFIG || '~/.config/pgrok/pgork.yml';
     const doc = load(readFileSync(pgrokConfigFile, 'utf8')) as PgrokConfig;
-    return doc.token;
+    return doc.vmId;
   } catch (error) {
     console.error('Loading PGROK_CONFIG failed', error);
   }
