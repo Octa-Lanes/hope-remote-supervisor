@@ -2,13 +2,13 @@ import 'dotenv/config';
 
 import csv from 'csvtojson';
 import { appendFile } from 'fs';
-import { Connection } from 'src/domain/connection';
+import { Connection, ConnectionType } from 'src/domain/connection';
 
-const logFile = 'src/logs/connection-log.csv';
+const logFile = (type: ConnectionType) => `src/logs/${type}-log.csv`;
 export const writeConnectionLog = (connection: Connection): Promise<void> => {
-  const data = `${new Date()},${connection.vmId},${connection.localPort},${connection.targetPort},${connection.type}\n`;
+  const data = `${new Date().getTime()},${connection.vmId},${connection.localPort},${connection.targetPort},${connection.type},${connection.state}\n`;
   return new Promise((resolve, reject) => {
-    appendFile(logFile, data, (err) => {
+    appendFile(logFile(connection.type), data, (err) => {
       if (err) {
         reject(err);
       }
@@ -17,7 +17,9 @@ export const writeConnectionLog = (connection: Connection): Promise<void> => {
   });
 };
 
-export const readLastLog = async (): Promise<Connection> => {
-  const jsonObj = await csv().fromFile(logFile);
+export const readLastLog = async (
+  type: ConnectionType,
+): Promise<Connection> => {
+  const jsonObj = await csv().fromFile(logFile(type));
   return jsonObj[jsonObj.length - 1] as Connection;
 };
