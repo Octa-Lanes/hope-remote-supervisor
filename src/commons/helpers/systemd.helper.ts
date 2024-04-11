@@ -1,6 +1,7 @@
 import { systemBus } from 'dbus-next';
 
 export const pgrokSSHServiceStatus = async (): Promise<boolean> => {
+  return;
   const bus = systemBus();
   const serviceNameDBUS = 'org.freedesktop.systemd1';
   const objectPath = `/org/freedesktop/systemd1/unit/pgrok_2dssh_2eservice`;

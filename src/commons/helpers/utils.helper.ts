@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 import { readFileSync } from 'fs';
 import { load } from 'js-yaml';
+import { ConnectionType } from 'src/domain/connection';
 
 interface PgrokConfig {
   remote_addr: string;
@@ -18,5 +19,16 @@ export const getDeviceId = (): string => {
     return doc.vmId;
   } catch (error) {
     console.error('Loading PGROK_CONFIG failed', error);
+  }
+};
+
+export const getConnectionType = (port: number): ConnectionType => {
+  switch (port) {
+    case 22:
+      return 'ssh';
+    case 5900:
+      return 'vnc';
+    default:
+      return 'unknown';
   }
 };
