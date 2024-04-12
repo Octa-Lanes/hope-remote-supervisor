@@ -21,16 +21,20 @@ export const writeConnectionLog = (connection: Connection): Promise<void> => {
 export const readLastLog = async (
   type: ConnectionType,
 ): Promise<(Connection & { timestamp: string }) | undefined> => {
-  const jsonObj = await csv({ noheader: true }).fromFile(logFile(type));
-  const lastObj = _.last(jsonObj);
-  if (_.isEmpty(lastObj)) return undefined;
-  const body = {
-    timestamp: lastObj?.field1,
-    vmId: lastObj?.field2,
-    localPort: parseInt(lastObj?.field3),
-    targetPort: parseInt(lastObj?.field4),
-    type: lastObj?.field5,
-    state: lastObj?.field6,
-  };
-  return body;
+  try {
+    const jsonObj = await csv({ noheader: true }).fromFile(logFile(type));
+    const lastObj = _.last(jsonObj);
+    if (_.isEmpty(lastObj)) return undefined;
+    const body = {
+      timestamp: lastObj?.field1,
+      vmId: lastObj?.field2,
+      localPort: parseInt(lastObj?.field3),
+      targetPort: parseInt(lastObj?.field4),
+      type: lastObj?.field5,
+      state: lastObj?.field6,
+    };
+    return body;
+  } catch (error) {
+    return undefined;
+  }
 };
