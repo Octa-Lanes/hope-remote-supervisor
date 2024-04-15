@@ -14,12 +14,14 @@ export class EventController {
   @Post('made-connection')
   @HttpCode(HttpStatus.OK)
   public async madeConnection(@Body() payload: MadeConnectionValidation) {
+    console.log(payload);
     this.madeConnectionUseCase.handle(payload);
   }
 
   @Post('disconnect')
   @HttpCode(HttpStatus.OK)
   public async disconnect(@Body() payload: DisconnectValidation) {
+    console.log(payload);
     this.disconnectUseCase.handle(payload);
   }
 }
