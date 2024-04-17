@@ -1,4 +1,4 @@
 export class MadeConnectionValidation {
-  localPort: number;
-  targetPort: number;
+  localPort: string;
+  targetPort: string;
 }

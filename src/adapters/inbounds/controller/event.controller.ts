@@ -1,4 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import * as _ from 'lodash';
 import { DisconnectValidation } from 'src/adapters/validations/events/disconnect.validation';
 import { MadeConnectionValidation } from 'src/adapters/validations/events/madeConnection.validation';
 import { DisconnectUseCase } from 'src/applications/usecases/events/disconnect.usecase';
@@ -14,14 +15,19 @@ export class EventController {
   @Post('made-connection')
   @HttpCode(HttpStatus.OK)
   public async madeConnection(@Body() payload: MadeConnectionValidation) {
-    console.log(payload);
-    this.madeConnectionUseCase.handle(payload);
+    this.madeConnectionUseCase.handle({
+      localPort: parseInt(payload.localPort),
+      targetPort: parseInt(payload.targetPort),
+    });
   }
 
   @Post('disconnect')
   @HttpCode(HttpStatus.OK)
   public async disconnect(@Body() payload: DisconnectValidation) {
-    console.log(payload);
-    this.disconnectUseCase.handle(payload);
+    const targetPort = parseInt(_.last(payload.targetPort.split(':')));
+    this.disconnectUseCase.handle({
+      localPort: 0,
+      targetPort,
+    });
   }
 }

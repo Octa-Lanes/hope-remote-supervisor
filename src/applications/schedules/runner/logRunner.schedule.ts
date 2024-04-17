@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
 import {
   SSH_LOG_TOPIC,
@@ -14,7 +13,7 @@ export class LogRunner {
 
   constructor(private readonly mqttService: MqttService) {}
 
-  @Cron(CronExpression.EVERY_SECOND)
+  // @Cron(CronExpression.EVERY_SECOND)
   public async ssh() {
     const status = await pgrokSSHServiceStatus();
     const payload = JSON.stringify({
@@ -25,7 +24,7 @@ export class LogRunner {
     this.mqttService.publish(SSH_LOG_TOPIC, payload, { retain: true });
   }
 
-  @Cron(CronExpression.EVERY_SECOND)
+  // @Cron(CronExpression.EVERY_SECOND)
   public async vnc() {
     const status = await pgrokSSHServiceStatus();
     const payload = JSON.stringify({

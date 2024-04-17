@@ -1,8 +1,9 @@
 import 'dotenv/config';
 
 import { Injectable } from '@nestjs/common';
+import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
 import { MadeConnectionCommand } from 'src/applications/commands/events/madeConnection.command';
-import { writeConnectionLog } from 'src/commons/helpers/file.helper';
+import { SSH_LOG_TOPIC } from 'src/commons/constants/topic.constant';
 import {
   getConnectionType,
   getDeviceId,
@@ -11,7 +12,7 @@ import { Connection } from 'src/domain/connection';
 
 @Injectable()
 export class MadeConnectionUseCase {
-  constructor() {}
+  constructor(private readonly mqttService: MqttService) {}
 
   public async handle(command: MadeConnectionCommand) {
     const payload: Connection = {
@@ -22,6 +23,8 @@ export class MadeConnectionUseCase {
       state: 'connected',
     };
 
-    writeConnectionLog(payload);
+    this.mqttService.publish(SSH_LOG_TOPIC, JSON.stringify(payload), {
+      retain: false,
+    });
   }
 }

@@ -23,12 +23,17 @@ export const getDeviceId = (): string => {
 };
 
 export const getConnectionType = (port: number): ConnectionType => {
+  let type: ConnectionType = 'unknown';
   switch (port) {
     case 22:
-      return 'ssh';
+      type = 'ssh';
+      break;
     case 5900:
-      return 'vnc';
+      type = 'vnc';
+      break;
     default:
-      return 'unknown';
+      break;
   }
+
+  return type;
 };

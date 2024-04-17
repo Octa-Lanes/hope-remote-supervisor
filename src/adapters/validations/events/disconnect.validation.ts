@@ -1,4 +1,4 @@
 export class DisconnectValidation {
-  localPort: number;
-  targetPort: number;
+  localPort: string;
+  targetPort: string;
 }
