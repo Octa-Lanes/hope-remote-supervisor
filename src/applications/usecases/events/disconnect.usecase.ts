@@ -23,6 +23,8 @@ export class DisconnectUseCase {
       state: 'disconnected',
     };
 
+    console.log(SSH_LOG_TOPIC, payload);
+
     this.mqttService.publish(SSH_LOG_TOPIC, JSON.stringify(payload), {
       retain: false,
     });
