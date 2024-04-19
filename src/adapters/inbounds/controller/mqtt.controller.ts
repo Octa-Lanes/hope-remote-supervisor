@@ -10,7 +10,6 @@ export class MqttController {
   @MqttSubscribe(SERVICE_EXEC_TOPIC)
   async sshExec(topic: string, message: string) {
     const { type, cmd } = JSON.parse(message);
-    console.log(topic, message);
 
     await this.serviceExec.handle({ cmd, type });
   }
