@@ -1,10 +1,9 @@
 import { DisconnectUseCase } from 'src/applications/usecases/events/disconnect.usecase';
-import { SshShutdownUseCase } from 'src/applications/usecases/exec/sshShutdown.usecase';
-import { SshStartUpUseCase } from 'src/applications/usecases/exec/sshStartUp.usecase';
+import { ServiceExecUseCase } from 'src/applications/usecases/exec/serviceExec.usecase';
 
 import { MadeConnectionUseCase } from './events/madeConnection.usecase';
 
-const execUseCases = [SshStartUpUseCase, SshShutdownUseCase];
+const execUseCases = [ServiceExecUseCase];
 
 const eventUseCases = [MadeConnectionUseCase, DisconnectUseCase];
 

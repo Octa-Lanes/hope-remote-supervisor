@@ -1,26 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { SshShutdownUseCase } from 'src/applications/usecases/exec/sshShutdown.usecase';
-import { SshStartUpUseCase } from 'src/applications/usecases/exec/sshStartUp.usecase';
-import { SSH_EXEC_TOPIC } from 'src/commons/constants/topic.constant';
+import { ServiceExecUseCase } from 'src/applications/usecases/exec/serviceExec.usecase';
+import { SERVICE_EXEC_TOPIC } from 'src/commons/constants/topic.constant';
 import { MqttSubscribe } from 'src/commons/decorators/mqtt.decorator';
 
 @Injectable()
 export class MqttController {
-  constructor(
-    private readonly sshStartUpUseCase: SshStartUpUseCase,
-    private readonly sshShutdownUseCase: SshShutdownUseCase,
-  ) {}
+  constructor(private readonly serviceExec: ServiceExecUseCase) {}
 
-  @MqttSubscribe(SSH_EXEC_TOPIC)
-  async sshExec(message: string) {
-    switch (message) {
-      case 'startup':
-        this.sshStartUpUseCase.handle();
-        break;
-      case 'shutdown':
-        this.sshShutdownUseCase.handle();
-        break;
-      default:
-    }
+  @MqttSubscribe(SERVICE_EXEC_TOPIC)
+  async sshExec(topic: string, message: string) {
+    const { type, cmd } = JSON.parse(message);
+
+    await this.serviceExec.handle({ cmd, type });
   }
 }

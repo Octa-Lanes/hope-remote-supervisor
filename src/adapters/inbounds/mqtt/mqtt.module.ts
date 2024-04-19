@@ -83,7 +83,7 @@ export class MqttModule implements OnModuleInit {
 
     this.mqttClient.subscribe([...handlers.keys()]);
     this.mqttClient.on('message', (topic, message) => {
-      handlers.get(topic)(message.toString());
+      if (handlers.has(topic)) handlers.get(topic)(topic, message.toString());
     });
   }
 }
