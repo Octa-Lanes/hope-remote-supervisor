@@ -13,8 +13,7 @@ interface PgrokConfig {
 
 export const getDeviceId = (): string => {
   try {
-    const pgrokConfigFile =
-      process.env.PGROK_CONFIG || '~/.config/pgrok/pgrok.yml';
+    const pgrokConfigFile = '/root/.config/pgrok/pgrok.yml';
     const doc = load(readFileSync(pgrokConfigFile, 'utf8')) as PgrokConfig;
     return doc.vmId;
   } catch (error) {
