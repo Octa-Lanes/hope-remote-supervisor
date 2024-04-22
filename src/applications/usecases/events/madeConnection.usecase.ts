@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { Injectable } from '@nestjs/common';
 import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
 import { MadeConnectionCommand } from 'src/applications/commands/events/madeConnection.command';
-import { SSH_LOG_TOPIC } from 'src/commons/constants/topic.constant';
+import { SERVICE_CONNECTION_TOPIC } from 'src/commons/constants/topic.constant';
 import {
   getConnectionType,
   getDeviceId,
@@ -23,10 +23,12 @@ export class MadeConnectionUseCase {
       state: 'connected',
     };
 
-    console.log(SSH_LOG_TOPIC, payload);
-
-    this.mqttService.publish(SSH_LOG_TOPIC, JSON.stringify(payload), {
-      retain: false,
-    });
+    this.mqttService.publish(
+      SERVICE_CONNECTION_TOPIC,
+      JSON.stringify(payload),
+      {
+        retain: false,
+      },
+    );
   }
 }
