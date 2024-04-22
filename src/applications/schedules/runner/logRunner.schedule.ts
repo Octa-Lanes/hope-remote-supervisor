@@ -10,11 +10,13 @@ export class LogRunner implements OnModuleInit {
   constructor(private readonly mqttService: MqttService) {}
 
   onModuleInit() {
+    console.log(PULSE_TOPIC, '1', { retain: false });
     this.mqttService.publish(PULSE_TOPIC, '1', { retain: false });
   }
 
   @Cron(CronExpression.EVERY_5_MINUTES)
   public async pulse() {
+    console.log(PULSE_TOPIC, '1', { retain: false });
     this.mqttService.publish(PULSE_TOPIC, '1', { retain: false });
   }
 }
