@@ -10,9 +10,8 @@ export class LogRunner implements OnModuleInit {
   constructor(private readonly mqttService: MqttService) {}
 
   onModuleInit() {
-    setTimeout(() => {
-      this.mqttService.publish(PULSE_TOPIC, '1', { retain: false });
-    }, 0);
+    console.log('log runner pulse started');
+    this.mqttService.publish(PULSE_TOPIC, '1', { retain: false });
   }
 
   @Cron(CronExpression.EVERY_5_MINUTES)
