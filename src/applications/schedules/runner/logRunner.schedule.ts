@@ -5,8 +5,6 @@ import { PULSE_TOPIC } from 'src/commons/constants/topic.constant';
 
 @Injectable()
 export class LogRunner {
-  private readonly logger = new Logger(LogRunner.name);
-
   constructor(private readonly mqttService: MqttService) {}
 
   @Cron(CronExpression.EVERY_30_SECONDS)
