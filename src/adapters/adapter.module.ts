@@ -2,12 +2,13 @@ import 'dotenv/config';
 
 import { Global, Module } from '@nestjs/common';
 import { MqttModule } from 'src/adapters/inbounds/mqtt/mqtt.module';
+
 import { EventController } from './inbounds/controller/event.controller';
 
 @Global()
 @Module({
   imports: [
-    MqttModule.forRoot({
+    MqttModule.forRootAsync({
       connection: process.env.MQTT_HOST,
     }),
   ],

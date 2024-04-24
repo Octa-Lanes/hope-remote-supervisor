@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { DiscoveryModule, DiscoveryService } from '@nestjs/core';
 import * as _ from 'lodash';
-import { connect, MqttClient } from 'mqtt';
+import { connect, connectAsync, MqttClient } from 'mqtt';
 import { MqttController } from 'src/adapters/inbounds/controller/mqtt.controller';
 import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
 import { RootOption } from 'src/adapters/inbounds/mqtt/rootOption.interface';
@@ -19,19 +19,18 @@ import { MQTT_HANDLER_METADATA_KEY } from 'src/commons/decorators/mqtt.decorator
 @Global()
 @Module({})
 export class MqttModule implements OnModuleInit {
-  private readonly logger = new Logger(MqttModule.name);
-
   constructor(
     private readonly discoveryService: DiscoveryService,
     @Inject('MQTT_CLIENT') private readonly mqttClient: MqttClient,
   ) {}
 
-  static forRoot(option: RootOption): DynamicModule {
+  static async forRootAsync(option: RootOption): Promise<DynamicModule> {
+    const logger = new Logger(MqttModule.name);
+
     try {
-      const client = connect(option.connection);
+      const client = await connectAsync(option.connection);
 
-      console.log('Connected to mqtt');
-
+      logger.log(`Connected to MQTT server at ${option.connection}`);
       return {
         module: MqttModule,
         imports: [DiscoveryModule],
@@ -49,7 +48,7 @@ export class MqttModule implements OnModuleInit {
         exports: ['MQTT_CLIENT', MqttController, MqttService],
       };
     } catch (error) {
-      console.error('Fail to connect to mqtt');
+      logger.error('Failed to connect to MQTT server', error);
     }
   }
 
