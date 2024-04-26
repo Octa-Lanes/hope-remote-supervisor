@@ -12,12 +12,12 @@ export class LogRunner {
 
   constructor() {}
 
-  @Cron('*/5 * * * *')
-  public async log() {
-    setTimeout(() => {
-      this.uploadDirectory('/var/log/supervisor');
-    }, ms.seconds(30));
-  }
+  // @Cron('*/5 * * * *')
+  // public async log() {
+  //   setTimeout(() => {
+  //     this.uploadDirectory('/var/log/supervisor');
+  //   }, ms.seconds(30));
+  // }
 
   async uploadDirectory(directoryPath: string) {
     const files = readdirSync(directoryPath);
