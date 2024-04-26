@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Journal } from 'src/domain/journal';
+import { WriteLogPermanentUseCase } from 'src/applications/usecases/log/writeLogPermanent.usecase';
 
 @Injectable()
 export class JournalController {
-  constructor() {}
+  constructor(
+    private readonly writeLogPermanentUseCase: WriteLogPermanentUseCase,
+  ) {}
 
-  stream(data: Journal[]) {
-    console.log(data);
+  stream(data: string) {
+    this.writeLogPermanentUseCase.handle({ payload: data });
   }
 }
