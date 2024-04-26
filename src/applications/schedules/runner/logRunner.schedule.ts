@@ -27,7 +27,7 @@ export class LogRunner {
 
       if (
         stats.isFile() &&
-        dateDiff(dayjs().toDate(), stats.birthtime, 'second') >= 30
+        dateDiff(dayjs().toDate(), stats.birthtime, 'second') >= 30 // file was created more than 30 seconds ago
       ) {
         rm(filePath, () => {});
       }
