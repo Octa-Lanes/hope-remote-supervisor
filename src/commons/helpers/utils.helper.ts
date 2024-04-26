@@ -1,5 +1,6 @@
 import 'dotenv/config';
 
+import { Logger } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { load } from 'js-yaml';
 import { ConnectionType } from 'src/domain/connection';
@@ -12,12 +13,16 @@ interface PgrokConfig {
 }
 
 export const getDeviceId = (): string => {
+  const logger = new Logger(getDeviceId.name);
+
   try {
-    const pgrokConfigFile = '/root/.config/pgrok/pgrok.yml';
+    const pgrokConfigFile =
+      process.env.PGROK_CONFIG || '/root/.config/pgrok/pgrok.yml';
     const doc = load(readFileSync(pgrokConfigFile, 'utf8')) as PgrokConfig;
     return doc.vmId;
   } catch (error) {
-    console.error('Loading PGROK_CONFIG failed', error);
+    logger.error(error);
+    process.exit(1);
   }
 };
 
