@@ -27,6 +27,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "csvtojson": "^2.0.10",
+    "dayjs": "^1.11.10",
     "dbus-next": "^0.10.2",
     "dotenv": "^16.4.5",
     "js-yaml": "^4.1.0",
