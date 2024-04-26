@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 import { readdirSync, rm, statSync } from 'fs';
 import * as ms from 'milliseconds';
 import * as path from 'path';
