@@ -12,12 +12,12 @@ export class LogRunner {
 
   constructor() {}
 
-  // @Cron('*/5 * * * *')
-  // public async log() {
-  //   setTimeout(() => {
-  //     this.uploadDirectory('/var/log/supervisor');
-  //   }, ms.seconds(30));
-  // }
+  @Cron('*/5 * * * *')
+  public async log() {
+    setTimeout(() => {
+      this.uploadDirectory('/var/log/supervisor');
+    }, ms.seconds(30));
+  }
 
   async uploadDirectory(directoryPath: string) {
     const files = readdirSync(directoryPath);
@@ -29,14 +29,7 @@ export class LogRunner {
         stats.isFile() &&
         dateDiff(dayjs().toDate(), stats.birthtime, 'minute') >= 5
       ) {
-        rm(filePath, (error) => {
-          if (error) {
-            this.logger.error(error);
-            return;
-          }
-
-          this.logger.log('Remove: ' + filePath + ' successfully');
-        });
+        console.log(filePath);
       }
     }
   }
