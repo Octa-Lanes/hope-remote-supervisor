@@ -27,7 +27,7 @@ export class LogRunner {
 
       if (
         stats.isFile() &&
-        dateDiff(dayjs().toDate(), stats.birthtime, 'minute') >= 5
+        dateDiff(dayjs().toDate(), stats.birthtime, 'second') >= 30
       ) {
         rm(filePath, () => {});
       }
