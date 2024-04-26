@@ -1,12 +1,43 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
+import dayjs from 'dayjs';
+import { readdirSync, rm, statSync } from 'fs';
+import * as ms from 'milliseconds';
+import * as path from 'path';
+import { dateDiff } from 'src/commons/helpers/dayjs.helper';
 
 @Injectable()
 export class LogRunner {
-  constructor(private schedulerRegistry: SchedulerRegistry) {}
+  private logger = new Logger(LogRunner.name);
 
-  @Cron(CronExpression.EVERY_5_MINUTES, {
-    name: LogRunner.name,
-  })
-  public async log() {}
+  constructor() {}
+
+  @Cron('*/5 * * * *')
+  public async log() {
+    setTimeout(() => {
+      this.uploadDirectory('/var/log/supervisor');
+    }, ms.seconds(30));
+  }
+
+  async uploadDirectory(directoryPath: string) {
+    const files = readdirSync(directoryPath);
+    for (let file of files) {
+      const filePath = path.join(directoryPath, file);
+      const stats = statSync(filePath, { throwIfNoEntry: false });
+
+      if (
+        stats.isFile() &&
+        dateDiff(dayjs().toDate(), stats.birthtime, 'minute') >= 5
+      ) {
+        rm(filePath, (error) => {
+          if (error) {
+            this.logger.error(error);
+            return;
+          }
+
+          this.logger.log('Remove: ' + filePath + ' successfully');
+        });
+      }
+    }
+  }
 }

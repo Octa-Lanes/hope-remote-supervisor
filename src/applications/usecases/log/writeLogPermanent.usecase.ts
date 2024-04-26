@@ -1,4 +1,5 @@
 import { Injectable, Logger, OnApplicationShutdown } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { createWriteStream, WriteStream } from 'fs';
 import * as ms from 'milliseconds';
 import * as path from 'path';
@@ -13,7 +14,6 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
 
   constructor() {
     this.rotateLog();
-    this.setupRotation();
   }
 
   onApplicationShutdown(signal?: string) {
@@ -32,11 +32,10 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
     this.setupStream();
   }
 
-  private setupRotation() {
-    this.logInterval = setInterval(() => {
-      this.logStream.end();
-      this.rotateLog();
-    }, ms.minutes(5));
+  @Cron(CronExpression.EVERY_5_MINUTES)
+  setupRotation() {
+    this.logStream.end();
+    this.rotateLog();
   }
 
   private setupStream() {
