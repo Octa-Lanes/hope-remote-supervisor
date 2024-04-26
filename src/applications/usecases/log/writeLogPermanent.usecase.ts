@@ -7,7 +7,6 @@ import { WriteLogPermanentCommand } from 'src/applications/commands/log/writeLog
 @Injectable()
 export class WriteLogPermanentUseCase implements OnApplicationShutdown {
   private readonly logger = new Logger(WriteLogPermanentUseCase.name);
-
   private logStream: WriteStream;
   private logQueue: string[] = [];
   private logInterval: ReturnType<typeof setInterval>;
@@ -15,6 +14,10 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
   constructor() {
     this.rotateLog();
     this.setupRotation();
+
+    setInterval(() => {
+      console.log(this.logQueue);
+    }, ms.seconds(5));
   }
 
   onApplicationShutdown(signal?: string) {
