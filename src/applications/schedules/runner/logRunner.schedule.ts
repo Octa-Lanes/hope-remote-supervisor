@@ -29,7 +29,6 @@ export class LogRunner {
         stats.isFile() &&
         dateDiff(dayjs().toDate(), stats.birthtime, 'minute') >= 5
       ) {
-        console.log(filePath);
         rm(filePath, () => {});
       }
     }
