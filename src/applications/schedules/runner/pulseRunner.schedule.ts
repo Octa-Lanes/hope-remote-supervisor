@@ -4,7 +4,7 @@ import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
 import { PULSE_TOPIC } from 'src/commons/constants/topic.constant';
 
 @Injectable()
-export class LogRunner {
+export class PulseRunner {
   constructor(private readonly mqttService: MqttService) {}
 
   @Cron(CronExpression.EVERY_30_SECONDS)
