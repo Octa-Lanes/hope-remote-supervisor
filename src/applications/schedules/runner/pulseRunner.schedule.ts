@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
+import { MqttService } from 'src/adapters/mqtt/mqtt.service';
 import { PULSE_TOPIC } from 'src/commons/constants/topic.constant';
 
 @Injectable()

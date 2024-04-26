@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import { Injectable } from '@nestjs/common';
-import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
+import { MqttService } from 'src/adapters/mqtt/mqtt.service';
 import { MadeConnectionCommand } from 'src/applications/commands/events/madeConnection.command';
 import { SERVICE_CONNECTION_TOPIC } from 'src/commons/constants/topic.constant';
 import {

@@ -12,8 +12,8 @@ import { DiscoveryModule, DiscoveryService } from '@nestjs/core';
 import * as _ from 'lodash';
 import { connect, connectAsync, MqttClient } from 'mqtt';
 import { MqttController } from 'src/adapters/inbounds/controller/mqtt.controller';
-import { MqttService } from 'src/adapters/inbounds/mqtt/mqtt.service';
-import { RootOption } from 'src/adapters/inbounds/mqtt/rootOption.interface';
+import { MqttService } from 'src/adapters/mqtt/mqtt.service';
+import { RootOption } from 'src/adapters/mqtt/rootOption.interface';
 import { MQTT_HANDLER_METADATA_KEY } from 'src/commons/decorators/mqtt.decorator';
 
 @Global()
