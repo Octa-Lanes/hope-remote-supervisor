@@ -14,10 +14,6 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
   constructor() {
     this.rotateLog();
     this.setupRotation();
-
-    setInterval(() => {
-      console.log(this.logQueue);
-    }, ms.seconds(5));
   }
 
   onApplicationShutdown(signal?: string) {
