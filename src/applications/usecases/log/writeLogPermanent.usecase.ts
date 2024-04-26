@@ -1,5 +1,6 @@
 import { Injectable, Logger, OnApplicationShutdown } from '@nestjs/common';
 import { createWriteStream, WriteStream } from 'fs';
+import * as ms from 'milliseconds';
 import * as path from 'path';
 import { WriteLogPermanentCommand } from 'src/applications/commands/log/writeLogPermanent.command';
 
@@ -9,8 +10,21 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
 
   private logStream: WriteStream;
   private logQueue: string[] = [];
+  private logInterval: ReturnType<typeof setInterval>;
 
   constructor() {
+    this.rotateLog();
+    this.setupRotation();
+  }
+
+  onApplicationShutdown(signal?: string) {
+    if (this.logStream) {
+      this.logStream.end();
+      this.logInterval.unref();
+    }
+  }
+
+  private rotateLog() {
     const logFilePath = path.join(
       '/var/log/supervisor',
       `${new Date().getTime()}.log`,
@@ -19,10 +33,11 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
     this.setupStream();
   }
 
-  onApplicationShutdown(signal?: string) {
-    if (this.logStream) {
+  private setupRotation() {
+    this.logInterval = setInterval(() => {
       this.logStream.end();
-    }
+      this.rotateLog();
+    }, ms.minutes(5));
   }
 
   private setupStream() {
@@ -34,9 +49,8 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
       while (this.logQueue.length > 0) {
         const log = this.logQueue[0]; // Look at the first item without removing it
         const wrote = this.logStream.write(log);
-        if (!wrote) {
-          break; // Stop if the stream's buffer is full again
-        }
+
+        if (!wrote) break;
         this.logQueue.shift(); // Only remove the item if it was successfully written
       }
     });
@@ -51,6 +65,7 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
         this.logQueue.push(command.payload);
       }
     } catch (error) {
+      this.logQueue.push(command.payload);
       this.logger.error('Failed to write log:', error);
     }
   }
