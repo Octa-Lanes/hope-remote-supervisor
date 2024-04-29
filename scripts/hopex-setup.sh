@@ -123,8 +123,8 @@ Description=Supervisor App
 After=network.target
 
 [Service]
-EnvironmentFile=/home/sun108/Desktop/hope-remote-target-supervisor/.env
-WorkingDirectory=/home/sun108/Desktop/hope-remote-target-supervisor
+EnvironmentFile=/home/sun108/Desktop/hope-remote-supervisor/.env
+WorkingDirectory=/home/sun108/Desktop/hope-remote-supervisor
 ExecStart=node dist/main.js
 Restart=always
 User=root
