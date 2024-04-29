@@ -85,7 +85,8 @@ echo "pgrok has been installed and setup."
 
 # App log folder
 print_status "Creating app log folder"
-sudo mkdir -p /var/log/supervisor
+sudo rm -r /dev/shm/supervisor
+sudo mkdir -p /dev/shm/supervisor
 # 5. Setup systemd services
 print_status "Configuring systemd services"
 
