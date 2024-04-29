@@ -25,7 +25,7 @@ export class LogRunner {
 
       if (
         stats.isFile() &&
-        dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 30
+        dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 10
       ) {
         rm(filePath, () => {});
         this.logger.debug(`Deleted ${filePath}`);
