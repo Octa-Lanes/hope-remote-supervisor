@@ -14,9 +14,7 @@ export class LogRunner {
 
   @Cron('*/5 * * * *')
   public async log() {
-    setTimeout(() => {
-      this.uploadFrom(process.env.TEMP_LOG_DIR || '/dev/shm/supervisor');
-    }, ms.seconds(30));
+    this.uploadFrom(process.env.TEMP_LOG_DIR || '/dev/shm/supervisor');
   }
 
   async uploadFrom(directoryPath: string) {
