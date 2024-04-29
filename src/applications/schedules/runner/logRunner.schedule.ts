@@ -1,10 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import * as dayjs from 'dayjs';
-import { readdirSync, rm, statSync } from 'fs';
+import { readdirSync, readFileSync, rm, statSync } from 'fs';
 import * as ms from 'milliseconds';
 import * as path from 'path';
+import axiosInstance from 'src/commons/config/axios.config';
 import { dateDiff } from 'src/commons/helpers/dayjs.helper';
+import { getDeviceId } from 'src/commons/helpers/utils.helper';
 
 @Injectable()
 export class LogRunner {
@@ -25,9 +27,25 @@ export class LogRunner {
       const filePath = path.join(directoryPath, file);
 
       if (file !== 'temp.log') {
-        rm(filePath, (error) => {
-          if (error) this.logger.error(error);
-        });
+        try {
+          await axiosInstance.post(
+            `bo/v1/vms/${getDeviceId()}/upload-logs`,
+            {
+              name: file,
+              content: readFileSync(filePath),
+            },
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            },
+          );
+          rm(filePath, (error) => {
+            if (error) this.logger.error(error);
+          });
+        } catch (error) {
+          this.logger.error(error);
+        }
       }
     }
   }
