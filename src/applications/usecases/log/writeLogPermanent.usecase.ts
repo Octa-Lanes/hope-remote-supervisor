@@ -34,7 +34,7 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
     try {
       renameSync(
         path.join(this.logDir, 'temp.log'),
-        path.join(this.logDir, `old-${new Date().getTime()}.log`),
+        path.join(this.logDir, `${new Date().getTime()}.log`),
       );
     } catch (error) {
       this.logger.error(error);
