@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, SchedulerRegistry } from '@nestjs/schedule';
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import * as dayjs from 'dayjs';
 import { readdirSync, rm, statSync } from 'fs';
 import * as ms from 'milliseconds';
@@ -12,7 +12,7 @@ export class LogRunner {
 
   constructor() {}
 
-  @Cron('*/5 * * * *')
+  @Cron(CronExpression.EVERY_10_SECONDS)
   public async log() {
     this.uploadFrom(process.env.TEMP_LOG_DIR || '/dev/shm/supervisor');
   }
@@ -28,6 +28,7 @@ export class LogRunner {
         dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 30
       ) {
         rm(filePath, () => {});
+        this.logger.debug(`Deleted ${filePath}`);
       }
     }
   }

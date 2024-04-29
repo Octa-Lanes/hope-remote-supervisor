@@ -67,7 +67,7 @@ fi
 sudo bash -c 'cat > .env <<EOF
 MQTT_HOST="mqtt://broker.hivemq.com:1883"
 PGROK_CONFIG="/root/.config/pgrok/pgrok.yml"
-TEMP_LOG_DIR='/dev/shm/supervisor'
+TEMP_LOG_DIR="/dev/shm/supervisor"
 EOF'
 if ! sudo npm run build; then
     echo "Failed to build project."

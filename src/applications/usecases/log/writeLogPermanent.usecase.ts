@@ -31,7 +31,7 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
     this.setupStream();
   }
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_10_SECONDS)
   setupRotation() {
     this.logStream.end();
     this.rotateLog();
