@@ -15,11 +15,11 @@ export class LogRunner {
   @Cron('*/5 * * * *')
   public async log() {
     setTimeout(() => {
-      this.uploadDirectory('/var/log/supervisor');
+      this.uploadFrom(process.env.TEMP_LOG_DIR || '/dev/shm/supervisor');
     }, ms.seconds(30));
   }
 
-  async uploadDirectory(directoryPath: string) {
+  async uploadFrom(directoryPath: string) {
     const files = readdirSync(directoryPath);
     for (let file of files) {
       const filePath = path.join(directoryPath, file);
@@ -27,7 +27,7 @@ export class LogRunner {
 
       if (
         stats.isFile() &&
-        dateDiff(dayjs().toDate(), stats.birthtime, 'second') >= 30 // file was created more than 30 seconds ago
+        dateDiff(dayjs().toDate(), stats.birthtime, 'minute') >= 1
       ) {
         rm(filePath, () => {});
       }
