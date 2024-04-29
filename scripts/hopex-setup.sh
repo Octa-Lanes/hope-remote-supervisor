@@ -48,12 +48,12 @@ fi
 
 # 3. Install Supervisor app
 print_status "Setting up Supervisor App"
-sudo rm -rf /home/sun108/Desktop/hope-remote-target-supervisor
+sudo rm -rf /home/sun108/Desktop/hope-remote-supervisor
 if ! sudo git clone https://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@github.com/Octa-Lanes/hope-remote-supervisor.git; then
     echo "Failed to clone repository."
     exit 1
 fi
-cd hope-remote-target-supervisor
+cd hope-remote-supervisor
 if ! type pnpm > /dev/null; then
     echo "pnpm not found, installing it globally..."
     sudo npm install -g pnpm
