@@ -28,13 +28,15 @@ export class LogRunner {
           dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 10
         }`,
       );
-      // if (
-      //   stats.isFile() &&
-      //   dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 10
-      // ) {
-      //   rm(filePath, () => {});
-      //   this.logger.debug(`Deleted ${filePath}`);
-      // }
+      if (
+        stats.isFile() &&
+        dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 10
+      ) {
+        rm(filePath, (error) => {
+          if (error) this.logger.error(error);
+        });
+        this.logger.debug(`Deleted ${filePath}`);
+      }
     }
   }
 }
