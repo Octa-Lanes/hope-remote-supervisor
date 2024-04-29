@@ -29,15 +29,12 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
     this.setupStream();
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   setupRotation() {
     try {
       renameSync(
         path.join(this.logDir, 'temp.log'),
-        path.join(
-          this.logDir,
-          `old-${new Date().getTime().toString().slice(0, -4)}.log`,
-        ),
+        path.join(this.logDir, `old-${new Date().getTime()}.log`),
       );
     } catch (error) {
       this.logger.error(error);

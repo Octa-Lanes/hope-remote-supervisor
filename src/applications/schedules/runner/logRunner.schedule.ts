@@ -12,7 +12,7 @@ export class LogRunner {
 
   constructor() {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   public async log() {
     setTimeout(() => {
       this.uploadFrom(process.env.TEMP_LOG_DIR || '/dev/shm/supervisor');
@@ -25,10 +25,9 @@ export class LogRunner {
       const filePath = path.join(directoryPath, file);
 
       if (file !== 'temp.log') {
-        // rm(filePath, (error) => {
-        //   if (error) this.logger.error(error);
-        // });
-        this.logger.debug(`Deleted ${filePath}`);
+        rm(filePath, (error) => {
+          if (error) this.logger.error(error);
+        });
       }
     }
   }
