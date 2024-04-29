@@ -23,13 +23,18 @@ export class LogRunner {
       const filePath = path.join(directoryPath, file);
       const stats = statSync(filePath, { throwIfNoEntry: false });
 
-      if (
-        stats.isFile() &&
-        dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 10
-      ) {
-        rm(filePath, () => {});
-        this.logger.debug(`Deleted ${filePath}`);
-      }
+      this.logger.debug(
+        `File ${filePath}. isFile: ${stats.isFile()}. endLife: ${
+          dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 10
+        }`,
+      );
+      // if (
+      //   stats.isFile() &&
+      //   dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 10
+      // ) {
+      //   rm(filePath, () => {});
+      //   this.logger.debug(`Deleted ${filePath}`);
+      // }
     }
   }
 }
