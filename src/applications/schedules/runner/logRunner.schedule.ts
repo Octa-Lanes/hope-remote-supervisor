@@ -14,27 +14,20 @@ export class LogRunner {
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   public async log() {
-    this.uploadFrom(process.env.TEMP_LOG_DIR || '/dev/shm/supervisor');
+    setTimeout(() => {
+      this.uploadFrom(process.env.TEMP_LOG_DIR || '/dev/shm/supervisor');
+    }, 0);
   }
 
   async uploadFrom(directoryPath: string) {
     const files = readdirSync(directoryPath);
     for (let file of files) {
       const filePath = path.join(directoryPath, file);
-      const stats = statSync(filePath, { throwIfNoEntry: false });
 
-      this.logger.debug(
-        `File ${filePath}. isFile: ${stats.isFile()}. endLife: ${
-          dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 10
-        }`,
-      );
-      if (
-        stats.isFile() &&
-        dateDiff(dayjs().toDate(), stats.birthtime, 'seconds') > 10
-      ) {
-        rm(filePath, (error) => {
-          if (error) this.logger.error(error);
-        });
+      if (file !== 'temp.log') {
+        // rm(filePath, (error) => {
+        //   if (error) this.logger.error(error);
+        // });
         this.logger.debug(`Deleted ${filePath}`);
       }
     }
