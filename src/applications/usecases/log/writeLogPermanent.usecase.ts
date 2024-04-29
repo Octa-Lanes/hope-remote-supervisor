@@ -31,14 +31,17 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   setupRotation() {
-    renameSync(
-      path.join(this.logDir, 'temp.log'),
-      path.join(
-        this.logDir,
-        `old-${new Date().getTime().toString().slice(0, -4)}.log`,
-      ),
-    );
-
+    try {
+      renameSync(
+        path.join(this.logDir, 'temp.log'),
+        path.join(
+          this.logDir,
+          `old-${new Date().getTime().toString().slice(0, -4)}.log`,
+        ),
+      );
+    } catch (error) {
+      this.logger.error(error);
+    }
     this.logStream.end();
     this.rotateLog();
   }
