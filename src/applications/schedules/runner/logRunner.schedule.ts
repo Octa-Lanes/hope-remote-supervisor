@@ -24,14 +24,14 @@ export class LogRunner {
 
   async uploadFrom(directoryPath: string) {
     const files = readdirSync(directoryPath);
-    this.logger.debug('Log file count: ' + files.length);
+    this.logger.debug('Log file count: ' + (files.length - 1));
 
     for (let file of files) {
       const filePath = path.join(directoryPath, file);
 
       if (file !== 'temp.log') {
         try {
-          await axiosInstance.post(
+          const result = await axiosInstance.post(
             `bo/v1/vms/${getDeviceId()}/upload-logs`,
             {
               name: file,
@@ -43,6 +43,7 @@ export class LogRunner {
               },
             },
           );
+          this.logger.debug(result);
           rm(filePath, (error) => {
             if (error) this.logger.error(error);
             this.logger.debug(`Deleted ${filePath}`);
