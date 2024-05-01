@@ -38,7 +38,7 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
     });
   }
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_10_SECONDS)
   setupRotation() {
     try {
       renameSync(

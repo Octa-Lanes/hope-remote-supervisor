@@ -14,15 +14,18 @@ export class LogRunner {
 
   constructor() {}
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_10_SECONDS)
   public async log() {
     setTimeout(() => {
+      this.logger.debug('Log Runner Invoked');
       this.uploadFrom(process.env.TEMP_LOG_DIR || '/dev/shm/supervisor');
     }, 0);
   }
 
   async uploadFrom(directoryPath: string) {
     const files = readdirSync(directoryPath);
+    this.logger.debug('Log file count: ' + files.length);
+
     for (let file of files) {
       const filePath = path.join(directoryPath, file);
 
@@ -42,6 +45,7 @@ export class LogRunner {
           );
           rm(filePath, (error) => {
             if (error) this.logger.error(error);
+            this.logger.debug(`Deleted ${filePath}`);
           });
         } catch (error) {
           this.logger.error(error);
