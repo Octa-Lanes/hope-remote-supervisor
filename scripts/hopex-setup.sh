@@ -94,6 +94,7 @@ sudo mkdir -p /dev/shm/supervisor
 print_status "Configuring systemd services"
 
 # pgrok service for ports 22 and 5900
+sudo systemctl stop pgrok-ssh.service
 sudo rm -f /etc/systemd/system/pgrok-ssh.service
 sudo bash -c 'cat > /etc/systemd/system/pgrok-ssh.service <<EOF
 [Service]
@@ -105,6 +106,7 @@ Restart=always
 WantedBy=multi-user.target
 EOF'
 
+sudo systemctl stop pgrok-vnc.service
 sudo rm -f /etc/systemd/system/pgrok-vnc.service
 sudo bash -c 'cat > /etc/systemd/system/pgrok-vnc.service <<EOF
 [Service]
@@ -117,6 +119,7 @@ WantedBy=multi-user.target
 EOF'
 
 # Supervisor app service
+sudo systemctl stop supervisor.service
 sudo rm -f /etc/systemd/system/supervisor.service
 sudo bash -c 'cat > /etc/systemd/system/supervisor.service <<EOF
 [Unit]
