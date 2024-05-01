@@ -12,7 +12,7 @@ export class LogRunner {
 
   constructor() {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   public async log() {
     setTimeout(() => {
       this.logger.debug('Log Runner Invoked');
