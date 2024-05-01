@@ -15,14 +15,12 @@ export class LogRunner {
   @Cron(CronExpression.EVERY_5_MINUTES)
   public async log() {
     setTimeout(() => {
-      this.logger.debug('Log Runner Invoked');
       this.uploadFrom(process.env.TEMP_LOG_DIR || '/dev/shm/supervisor');
     }, 0);
   }
 
   async uploadFrom(directoryPath: string) {
     const files = readdirSync(directoryPath);
-    this.logger.debug('Log file count: ' + (files.length - 1));
 
     for (let file of files) {
       const filePath = path.join(directoryPath, file);
@@ -33,7 +31,7 @@ export class LogRunner {
           const fileStream = createReadStream(filePath);
           formData.append('files', fileStream, file);
 
-          const result = await axiosInstance.post(
+          await axiosInstance.post(
             `bo/v1/vms/${getDeviceId()}/upload-logs`,
             formData,
             {
@@ -42,10 +40,8 @@ export class LogRunner {
               },
             },
           );
-          this.logger.debug(result.data);
           rm(filePath, (error) => {
             if (error) this.logger.error(error);
-            this.logger.debug(`Deleted ${filePath}`);
           });
         } catch (error) {
           this.logger.error(error);

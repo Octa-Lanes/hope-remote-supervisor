@@ -1,6 +1,13 @@
 import { Injectable, Logger, OnApplicationShutdown } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { createWriteStream, rename, renameSync, WriteStream } from 'fs';
+import {
+  createWriteStream,
+  existsSync,
+  mkdirSync,
+  rename,
+  renameSync,
+  WriteStream,
+} from 'fs';
 import * as ms from 'milliseconds';
 import * as path from 'path';
 import { WriteLogPermanentCommand } from 'src/applications/commands/log/writeLogPermanent.command';
@@ -25,6 +32,10 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
   }
 
   private rotateLog() {
+    if (!existsSync(this.logDir)) {
+      mkdirSync(this.logDir);
+    }
+
     const logFilePath = path.join(this.logDir, `temp.log`);
     this.logStream = createWriteStream(logFilePath, { flags: 'a' });
     this.logStream.on('error', (error) => {

@@ -28,7 +28,7 @@ export class JournalModule implements OnModuleInit {
   }
 
   onModuleInit() {
-    const journalctl = spawn('journalctl', ['-f', '-o', 'json']);
+    const journalctl = spawn('journalctl', ['-f']);
 
     const journalController = this.discoveryService
       .getProviders()
