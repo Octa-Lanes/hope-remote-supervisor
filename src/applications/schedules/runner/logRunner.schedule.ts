@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import FormData from 'form-data';
+import * as FormData from 'form-data';
 import { createReadStream, readdirSync, rm } from 'fs';
 import * as path from 'path';
 import axiosInstance from 'src/commons/config/axios.config';
