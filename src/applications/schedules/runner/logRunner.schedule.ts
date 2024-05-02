@@ -32,7 +32,7 @@ export class LogRunner {
           formData.append('files', fileStream, file);
 
           await axiosInstance.post(
-            `bo/v1/vms/${getDeviceId()}/upload-logs`,
+            `events/${getDeviceId()}/upload-logs`,
             formData,
             {
               headers: {
