@@ -1,5 +1,6 @@
 import { Injectable, Logger, OnApplicationShutdown } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import * as dayjs from 'dayjs';
 import {
   createWriteStream,
   existsSync,
@@ -54,7 +55,10 @@ export class WriteLogPermanentUseCase implements OnApplicationShutdown {
     try {
       renameSync(
         path.join(this.logDir, 'temp.log'),
-        path.join(this.logDir, `${new Date().getTime()}.log`),
+        path.join(
+          this.logDir,
+          `${dayjs().subtract(5, 'minutes').toDate().getTime()}.log`,
+        ),
       );
     } catch (error) {
       this.logger.error(error);
