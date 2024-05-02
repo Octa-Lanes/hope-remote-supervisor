@@ -47,7 +47,13 @@ export class JournalModule implements OnModuleInit {
     });
 
     journalctl.stderr.on('data', (data) => {
-      this.logger.error(`stderr: ${data}`);
+      try {
+        const formatData = data.toString();
+        if (journalController.instance?.stream)
+          journalController.instance?.stream(formatData);
+      } catch (error) {
+        this.logger.error(error);
+      }
     });
 
     journalctl.on('error', (error) => {
