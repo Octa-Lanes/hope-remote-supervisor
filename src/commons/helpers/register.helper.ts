@@ -4,7 +4,7 @@ import { dump } from 'js-yaml';
 import axiosInstance from 'src/commons/config/axios.config';
 import { getRawMachineId } from 'src/commons/helpers/utils.helper';
 
-export const registerDevice = async (): Promise<boolean> => {
+const registerDevice = async (): Promise<boolean> => {
   const logger = new Logger(registerDevice.name);
 
   try {
@@ -36,4 +36,14 @@ export const registerDevice = async (): Promise<boolean> => {
     logger.error(error);
     return false;
   }
+};
+
+export const initDevice = async () => {
+  let registered = false;
+
+  while (!registered) {
+    registered = await registerDevice();
+  }
+
+  return null;
 };
