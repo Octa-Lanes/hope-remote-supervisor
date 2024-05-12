@@ -5,10 +5,13 @@ import { PULSE_TOPIC } from 'src/commons/constants/topic.constant';
 
 @Injectable()
 export class PulseRunner {
+  private readonly logger = new Logger(PulseRunner.name);
   constructor(private readonly mqttService: MqttService) {}
 
   @Cron(CronExpression.EVERY_30_SECONDS)
   public async pulse() {
-    this.mqttService.publish(PULSE_TOPIC, '1', { retain: false });
+    this.mqttService.publish(PULSE_TOPIC, '1', { retain: false }, () => {
+      this.logger.debug(`Published to ${PULSE_TOPIC}`);
+    });
   }
 }
