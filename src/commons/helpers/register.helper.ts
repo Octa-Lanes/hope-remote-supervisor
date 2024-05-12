@@ -1,9 +1,12 @@
+import { Logger } from '@nestjs/common';
 import { writeFileSync } from 'fs';
 import { dump } from 'js-yaml';
 import axiosInstance from 'src/commons/config/axios.config';
 import { getRawMachineId } from 'src/commons/helpers/utils.helper';
 
 export const registerDevice = async (): Promise<boolean> => {
+  const logger = new Logger(registerDevice.name);
+
   try {
     const machineId = getRawMachineId();
     const { data: registered } = await axiosInstance.post(
@@ -27,10 +30,10 @@ export const registerDevice = async (): Promise<boolean> => {
       }),
     );
 
-    console.log('Device registered successfully');
+    logger.log('Device registered successfully');
     return true;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return false;
   }
 };
