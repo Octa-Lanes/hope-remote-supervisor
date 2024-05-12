@@ -26,6 +26,10 @@ export const getDeviceId = (): string => {
   }
 };
 
+export const getRawMachineId = (): string => {
+  return '123456';
+};
+
 export const getConnectionType = (port: number): ConnectionType => {
   let type: ConnectionType = 'unknown';
   switch (port) {

@@ -22,9 +22,8 @@ if [ "$(pwd)" != "/home/sun108/Desktop" ]; then
 fi
 
 # Check if pgrok configuration file exists
-if ! sudo test -f "/root/.config/pgrok/pgrok.yml"; then
-    echo "pgrok configuration file not found at /root/.config/pgrok/pgrok.yml. Exiting."
-    exit 1
+if sudo test -f "/root/.config/pgrok/pgrok.yml"; then
+    sudo rm -f "/root/.config/pgrok/pgrok.yml";
 fi
 
 # 1. Install and setup Node.js
