@@ -26,7 +26,7 @@ const registerDevice = async (): Promise<boolean> => {
         server_addr: 'https://test-api-hope-remote.8lanes.co',
         forward_addr: '',
         token: registered.key,
-        vmId: registered.id,
+        vmId: machineId,
       }),
     );
 
