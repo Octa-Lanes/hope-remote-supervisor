@@ -3,7 +3,10 @@ import 'dotenv/config';
 import { Injectable } from '@nestjs/common';
 import { MqttService } from 'src/adapters/mqtt/mqtt.service';
 import { MadeConnectionCommand } from 'src/applications/commands/events/madeConnection.command';
-import { SERVICE_CONNECTION_TOPIC } from 'src/commons/constants/topic.constant';
+import {
+  SERVICE_CONNECTION_TOPIC,
+  SERVICE_CONNECTION_TOPIC_ORIGINAL,
+} from 'src/commons/constants/topic.constant';
 import {
   getConnectionType,
   getRawMachineId,
@@ -25,7 +28,10 @@ export class MadeConnectionUseCase {
 
     this.mqttService.publish(
       SERVICE_CONNECTION_TOPIC,
-      JSON.stringify(payload),
+      JSON.stringify({
+        ...payload,
+        originalTopic: SERVICE_CONNECTION_TOPIC_ORIGINAL,
+      }),
       {
         retain: false,
       },
