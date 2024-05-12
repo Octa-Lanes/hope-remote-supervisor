@@ -22,7 +22,6 @@ export const getDeviceId = (): string => {
     return doc.vmId;
   } catch (error) {
     logger.error(error);
-    process.exit(1);
   }
 };
 
