@@ -32,7 +32,7 @@ export class LogRunner {
           formData.append('files', fileStream, file);
 
           await axiosInstance.post(
-            `events/${getRawMachineId()}/upload-logs`,
+            `supervisor/v1/${getRawMachineId()}/upload-logs`,
             formData,
             {
               headers: {

@@ -10,7 +10,7 @@ const registerDevice = async (): Promise<boolean> => {
   try {
     const machineId = getRawMachineId();
     const { data: registered } = await axiosInstance.post(
-      'bo/v1/vms/self-register',
+      'supervisor/v1/vms/self-register',
       {
         machineId,
       },
@@ -22,8 +22,8 @@ const registerDevice = async (): Promise<boolean> => {
     writeFileSync(
       configLocation,
       dump({
-        remote_addr: '54.251.68.117:2222',
-        server_addr: 'https://test-api-hope-remote.8lanes.co',
+        remote_addr: process.env.PGROK_SERVER_URL,
+        server_addr: process.env.SERVER_URL,
         forward_addr: '',
         token: registered.key,
         vmId: machineId,
