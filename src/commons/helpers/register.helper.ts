@@ -10,7 +10,7 @@ const registerDevice = async (): Promise<boolean> => {
   try {
     const machineId = getRawMachineId();
     const { data: registered } = await axiosInstance.post(
-      'supervisor/v1/vms/self-register',
+      'supervisor/v1/self-register',
       {
         machineId,
       },
