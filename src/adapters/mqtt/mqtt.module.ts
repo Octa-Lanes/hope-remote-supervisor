@@ -28,9 +28,14 @@ export class MqttModule implements OnModuleInit {
     const logger = new Logger(MqttModule.name);
 
     try {
-      const client = await connectAsync(option.connection);
+      const client = await connectAsync(option.brokerUrl, {
+        username: option.username,
+        password: option.password,
+        protocol: 'tcp',
+        protocolVersion: 5,
+      });
 
-      logger.log(`Connected to MQTT server at ${option.connection}`);
+      logger.log(`Connected to MQTT server at ${option.brokerUrl}`);
       return {
         module: MqttModule,
         imports: [DiscoveryModule],

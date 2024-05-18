@@ -1,3 +1,5 @@
 export interface RootOption {
-  connection: string;
+  brokerUrl: string;
+  username: string;
+  password: string;
 }

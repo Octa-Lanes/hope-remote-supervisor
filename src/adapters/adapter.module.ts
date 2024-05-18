@@ -10,7 +10,9 @@ import { EventController } from './inbounds/controller/event.controller';
 @Module({
   imports: [
     MqttModule.forRootAsync({
-      connection: process.env.MQTT_HOST,
+      brokerUrl: process.env.MQTT_BROKER,
+      username: process.env.MQTT_USERNAME,
+      password: process.env.MQTT_PASSWORD,
     }),
     JournalModule.forRoot(),
   ],
