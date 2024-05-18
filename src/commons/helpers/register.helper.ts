@@ -9,12 +9,9 @@ const registerDevice = async (): Promise<boolean> => {
 
   try {
     const machineId = getRawMachineId();
-    const { data: registered } = await axiosInstance.post(
-      'supervisor/v1/self-register',
-      {
-        machineId,
-      },
-    );
+    const { data } = await axiosInstance.post('supervisor/v1/self-register', {
+      machineId,
+    });
 
     const configLocation =
       process.env.PGROK_CONFIG || '/root/.config/pgrok/pgrok.yml';
@@ -25,7 +22,7 @@ const registerDevice = async (): Promise<boolean> => {
         remote_addr: process.env.PGROK_SERVER_URL,
         server_addr: process.env.SERVER_URL,
         forward_addr: '',
-        token: registered.key,
+        token: data.data.key,
         vmId: machineId,
       }),
     );
