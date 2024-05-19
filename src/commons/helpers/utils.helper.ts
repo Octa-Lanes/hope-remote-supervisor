@@ -26,7 +26,8 @@ export const getDeviceId = (): string => {
 };
 
 export const getRawMachineId = (): string => {
-  const path = process.env.MACHINE_INFO || '/etc/supervisor/machine-info.json';
+  const path =
+    process.env.MACHINE_INFO_PATH || '/etc/supervisor/machine-info.json';
   try {
     const configFile = JSON.parse(readFileSync(path, 'utf-8'));
 
