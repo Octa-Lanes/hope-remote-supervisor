@@ -26,15 +26,12 @@ export const getDeviceId = (): string => {
 };
 
 export const getRawMachineId = (): string => {
+  const path = process.env.MACHINE_INFO || '/etc/supervisor/machine-info.json';
   try {
-    const configFile = JSON.parse(
-      readFileSync('/etc/supervisor/machine-info.json', 'utf-8'),
-    );
+    const configFile = JSON.parse(readFileSync(path, 'utf-8'));
 
     if (!configFile['serialNumber'])
-      throw new Error(
-        'serialNumber not found at /etc/supervisor/machine-info.json',
-      );
+      throw new Error('serialNumber not found at ' + path);
     return configFile['serialNumber'];
   } catch (error) {
     console.error(error);
