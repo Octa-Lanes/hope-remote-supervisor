@@ -26,7 +26,20 @@ export const getDeviceId = (): string => {
 };
 
 export const getRawMachineId = (): string => {
-  return '123456';
+  try {
+    const configFile = JSON.parse(
+      readFileSync('/etc/supervisor/machine-info.json', 'utf-8'),
+    );
+
+    if (!configFile['serialNumber'])
+      throw new Error(
+        'serialNumber not found at /etc/supervisor/machine-info.json',
+      );
+    return configFile['serialNumber'];
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
 };
 
 export const getConnectionType = (port: number): ConnectionType => {
