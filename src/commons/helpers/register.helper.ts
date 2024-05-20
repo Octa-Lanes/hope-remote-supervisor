@@ -23,7 +23,7 @@ const registerDevice = async (): Promise<boolean> => {
         server_addr: process.env.SERVER_URL,
         forward_addr: '',
         token: data.data.key,
-        vmId: machineId,
+        vmId: data.data.id,
       }),
     );
 

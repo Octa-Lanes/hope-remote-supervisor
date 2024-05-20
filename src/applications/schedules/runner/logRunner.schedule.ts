@@ -4,7 +4,7 @@ import * as FormData from 'form-data';
 import { createReadStream, readdirSync, rm } from 'fs';
 import * as path from 'path';
 import axiosInstance from 'src/commons/config/axios.config';
-import { getRawMachineId } from 'src/commons/helpers/utils.helper';
+import { getDeviceId, getRawMachineId } from 'src/commons/helpers/utils.helper';
 
 @Injectable()
 export class LogRunner {
@@ -32,7 +32,7 @@ export class LogRunner {
           formData.append('files', fileStream, file);
 
           await axiosInstance.post(
-            `supervisor/v1/${getRawMachineId()}/upload-logs`,
+            `supervisor/v1/${getDeviceId()}/upload-logs`,
             formData,
             {
               headers: {
