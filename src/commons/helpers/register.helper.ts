@@ -9,9 +9,17 @@ const registerDevice = async (): Promise<boolean> => {
 
   try {
     const machineId = getRawMachineId();
-    const { data } = await axiosInstance.post('supervisor/v1/self-register', {
-      machineId,
-    });
+    const { data } = await axiosInstance.post(
+      'supervisor/v1/self-register',
+      {
+        machineId,
+      },
+      {
+        headers: {
+          Authorization: `bearer ${process.env.AUTH_TOKEN}`,
+        },
+      },
+    );
 
     const configLocation =
       process.env.PGROK_CONFIG || '/root/.config/pgrok/pgrok.yml';
