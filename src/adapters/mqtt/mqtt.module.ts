@@ -28,10 +28,11 @@ export class MqttModule implements OnModuleInit {
     const logger = new Logger(MqttModule.name);
 
     try {
+      logger.debug(`Connecting to MQTT Broker at ${option.brokerUrl}`);
+
       const client = await connectAsync(option.brokerUrl, {
         username: option.username,
         password: option.password,
-        protocol: 'tcp',
         protocolVersion: 5,
       });
 
