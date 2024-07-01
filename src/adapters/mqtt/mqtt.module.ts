@@ -59,6 +59,7 @@ export class MqttModule implements OnModuleInit {
   }
 
   onModuleInit() {
+    const logger = new Logger(MqttModule.name);
     const mqttController = this.discoveryService
       .getProviders()
       .find((provider) => provider.name === MqttController.name);
@@ -88,6 +89,7 @@ export class MqttModule implements OnModuleInit {
 
     this.mqttClient.subscribe([...handlers.keys()]);
     this.mqttClient.on('message', (topic, message) => {
+      logger.debug(`Received MQTT Topic: ${topic}\nBody:${message}`);
       if (handlers.has(topic)) handlers.get(topic)(topic, message.toString());
     });
   }
