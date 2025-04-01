@@ -41,6 +41,10 @@ const registerDevice = async (): Promise<boolean> => {
 export const initDevice = async () => {
   let registered = false;
 
+  const sleep = (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   while (!registered) {
     registered = await registerDevice();
     if (!registered) {
