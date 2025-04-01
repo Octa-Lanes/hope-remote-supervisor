@@ -43,6 +43,9 @@ export const initDevice = async () => {
 
   while (!registered) {
     registered = await registerDevice();
+    if (!registered) {
+      await sleep(10000); // 10 seconds delay
+    }
   }
 
   return null;
