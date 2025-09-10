@@ -4,7 +4,7 @@ import * as FormData from 'form-data';
 import { createReadStream, readdirSync, rm } from 'fs';
 import * as path from 'path';
 import axiosInstance from 'src/commons/config/axios.config';
-import { getDeviceId, getRawMachineId } from 'src/commons/helpers/utils.helper';
+import { calculateJitter, getDeviceId, getRawMachineId } from 'src/commons/helpers/utils.helper';
 
 @Injectable()
 export class LogRunner {
@@ -14,9 +14,11 @@ export class LogRunner {
 
   @Cron(CronExpression.EVERY_5_MINUTES)
   public async log() {
+    const jitterDelay = calculateJitter(0, 1000, 2.5 * 60 * 1000);
+
     setTimeout(() => {
       this.uploadFrom(process.env.TEMP_LOG_DIR || '/dev/shm/supervisor');
-    }, 0);
+    }, jitterDelay);
   }
 
   async uploadFrom(directoryPath: string) {

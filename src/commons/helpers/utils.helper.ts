@@ -55,3 +55,13 @@ export const getConnectionType = (port: number): ConnectionType => {
 
   return type;
 };
+
+export const calculateJitter = (
+  baseMs: number,
+  jitterMinMs: number,
+  jitterMaxMs: number,
+): number => {
+  const jitter =
+    Math.floor(Math.random() * (jitterMaxMs - jitterMinMs + 1)) + jitterMinMs;
+  return baseMs + jitter;
+};

@@ -15,6 +15,7 @@ import { MqttController } from 'src/adapters/inbounds/controller/mqtt.controller
 import { MqttService } from 'src/adapters/mqtt/mqtt.service';
 import { RootOption } from 'src/adapters/mqtt/rootOption.interface';
 import { MQTT_HANDLER_METADATA_KEY } from 'src/commons/decorators/mqtt.decorator';
+import { calculateJitter } from 'src/commons/helpers/utils.helper';
 
 @Global()
 @Module({})
@@ -34,6 +35,8 @@ export class MqttModule implements OnModuleInit {
         username: option.username,
         password: option.password,
         protocolVersion: 5,
+        reconnectOnConnackError: true,
+        reconnectPeriod: calculateJitter(5 * 1000, 1000, 10 * 1000), // 5s + 1-10s jitter
       });
 
       logger.log(`Connected to MQTT server at ${option.brokerUrl}`);
