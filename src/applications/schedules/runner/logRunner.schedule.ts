@@ -3,7 +3,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import * as FormData from 'form-data';
 import { createReadStream, readdirSync, rm } from 'fs';
 import * as path from 'path';
-import axiosInstance from 'src/commons/config/axios.config';
+import axiosLogServerInstance from 'src/commons/config/axios.logServer.config';
 import { calculateJitter, getDeviceId, getRawMachineId } from 'src/commons/helpers/utils.helper';
 
 @Injectable()
@@ -33,7 +33,7 @@ export class LogRunner {
           const fileStream = createReadStream(filePath);
           formData.append('files', fileStream, file);
 
-          await axiosInstance.post(
+          await axiosLogServerInstance.post(
             `supervisor/v1/${getDeviceId()}/upload-logs`,
             formData,
             {
