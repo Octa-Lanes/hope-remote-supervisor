@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { writeFileSync } from 'fs';
+import { writeFileSync, existsSync } from 'fs';
 import { dump } from 'js-yaml';
 import axiosInstance from 'src/commons/config/axios.config';
 import { getRawMachineId } from 'src/commons/helpers/utils.helper';
@@ -8,6 +8,15 @@ const registerDevice = async (): Promise<boolean> => {
   const logger = new Logger(registerDevice.name);
 
   try {
+    const configLocation =
+      process.env.PGROK_CONFIG || '/root/.config/pgrok/pgrok.yml';
+
+    // Check if config file already exists
+    if (existsSync(configLocation)) {
+      logger.debug('Config file already exists, skipping registration');
+      return true;
+    }
+
     const machineId = getRawMachineId();
 
     logger.debug(`Registering with ID: ${machineId}...`);
@@ -15,9 +24,6 @@ const registerDevice = async (): Promise<boolean> => {
     const { data } = await axiosInstance.post('supervisor/v1/self-register', {
       machineId,
     });
-
-    const configLocation =
-      process.env.PGROK_CONFIG || '/root/.config/pgrok/pgrok.yml';
 
     writeFileSync(
       configLocation,
